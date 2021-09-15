@@ -7,6 +7,7 @@ public class AppController {
 
    private LaenderListe laenderListe;
    private StaedteListe staedteListe;
+   private PersonenListe personenListe;
     private DBConnector dBConnector;
 
     private void initApp() {
@@ -14,7 +15,8 @@ public class AppController {
             dBConnector = new DBConnectorMySQL("10.201.9.202", 3306, "lorenz", "lorenz123", "sakila");
             laenderListe = new LaenderListeDB(dBConnector);
             staedteListe = new StaedteListeDB(dBConnector);
-            GUIStadt gUIStadt = new GUIStadt(laenderListe, staedteListe);
+            personenListe = new PersonenListeDB(dBConnector);
+            GUIStadt gUIStadt = new GUIStadt(laenderListe, staedteListe, personenListe);
             gUIStadt.setVisible(true);
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Fehler beim Laden der Daten", JOptionPane.ERROR_MESSAGE);
