@@ -1,6 +1,8 @@
 package de.its.lf;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBConnectorMySQL extends DBConnector {
 
@@ -9,8 +11,16 @@ public class DBConnectorMySQL extends DBConnector {
     }
 
     @Override
-    public void connect() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        con = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + dbName, user, password);
+    public void connect() throws Exception{
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            throw new Exception("Treiber konnte nicht geladen werden");
+        }
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + dbName, user, password);
+        } catch (SQLException ex) {
+             throw new Exception("DB-Verbindung konnte nicht aufgebaut werden");
+        }
     }
 }

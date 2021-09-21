@@ -8,6 +8,7 @@ package de.its.lf;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,21 +22,25 @@ public class GUIStadt extends javax.swing.JFrame {
     private final LaenderListe laenderListe;
     private final StaedteListe staedteListe;
     private final PersonenListe personenListe;
-    
-    public GUIStadt(LaenderListe laenderListe, StaedteListe staedteListe, PersonenListe personenListe) throws ClassNotFoundException, SQLException {
+
+    public GUIStadt(LaenderListe laenderListe, StaedteListe staedteListe, PersonenListe personenListe) {
         this.laenderListe = laenderListe;
         this.staedteListe = staedteListe;
         this.personenListe = personenListe;
         initComponents();
         loadData();
         txf_CityID.setEnabled(false);
-        
+
     }
-    
-    private void loadData() throws ClassNotFoundException, SQLException {
-        //laenderListe.get();
-        lst_laender.setListData(laenderListe.getArray());
-        
+
+    private void loadData() {
+
+        try {
+            lst_laender.setListData(laenderListe.getArray());
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Fehler beim Laden der Daten", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     /**
@@ -241,10 +246,8 @@ public class GUIStadt extends javax.swing.JFrame {
         if (land != null) {
             try {
                 lst_staedte.setListData(staedteListe.getArray(land.getCountry_ID()));
-                
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(GUIStadt.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
+
+            } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(GUIStadt.class.getName()).log(Level.SEVERE, null, ex);
             }
         }//else errormessage
@@ -257,14 +260,14 @@ public class GUIStadt extends javax.swing.JFrame {
             try {
                 txf_CityID.setText(String.valueOf(stadt.getCity_ID()));
                 txf_CityBezeichnung.setText(stadt.getCity_Bezeichnung());
-                
+
                 lst_personen.setListData(personenListe.getArray(stadt.getCity_ID()));
             } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(GUIStadt.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        
+
+
     }//GEN-LAST:event_lst_staedteValueChanged
 
     private void bt_UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_UpdateActionPerformed
@@ -272,7 +275,7 @@ public class GUIStadt extends javax.swing.JFrame {
         Stadt stadt = (Stadt) lst_staedte.getSelectedValue();
         stadt.setCity_ID(Integer.valueOf(txf_CityID.getText()));
         stadt.setCity_Bezeichnung(txf_CityBezeichnung.getText());
-        
+
 
     }//GEN-LAST:event_bt_UpdateActionPerformed
 

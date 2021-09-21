@@ -22,7 +22,7 @@ public abstract class DBConnector {
         this.dbName = dbName;
     }
 
-    public abstract void connect() throws ClassNotFoundException, SQLException;
+    public abstract void connect() throws Exception;
 
     public void disconnect() throws SQLException {
         res.close();
