@@ -11,16 +11,16 @@ public class DBConnectorMySQL extends DBConnector {
     }
 
     @Override
-    public void connect() throws Exception{
+    public void connect() throws SakilaException{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
-            throw new Exception("Treiber konnte nicht geladen werden");
+            throw new SakilaException("Treiber konnte nicht geladen werden");
         }
         try {
             con = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + dbName, user, password);
         } catch (SQLException ex) {
-             throw new Exception("DB-Verbindung konnte nicht aufgebaut werden");
+             throw new SakilaException("DB-Verbindung konnte nicht aufgebaut werden");
         }
     }
 }

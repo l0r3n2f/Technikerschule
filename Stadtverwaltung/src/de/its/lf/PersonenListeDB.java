@@ -24,7 +24,9 @@ public class PersonenListeDB implements PersonenListe {
     }
 
     @Override
-    public List<Person> get(int city_ID) throws ClassNotFoundException, SQLException {
+    public List<Person> get(int city_ID) throws SakilaException {
+        
+        
         dBConnector.connect();
 
         List<Person> personenListe = new ArrayList<>();
@@ -33,13 +35,18 @@ public class PersonenListeDB implements PersonenListe {
                 + "where customer.address_id = address.address_id\n"
                 + "and address.city_id = city.city_id\n"
                 + "and address.city_id = " + city_ID);
+        try {
+            while (rs.next()) {
+                Person person = new Person();
 
-        while (rs.next()) {
-            Person person = new Person();
-            person.setCustomer_ID(rs.getInt("customer_id"));
-            person.setCustomer_Firstname(rs.getString("first_name"));
-            person.setCustomer_Lastname(rs.getString("last_name"));
-            personenListe.add(person);
+                person.setCustomer_ID(rs.getInt("customer_id"));
+
+                person.setCustomer_Firstname(rs.getString("first_name"));
+                person.setCustomer_Lastname(rs.getString("last_name"));
+                personenListe.add(person);
+            }
+        } catch (SQLException ex) {
+              throw new SakilaException("Datenverarbeitung hat nicht funktioniert");
         }
         dBConnector.disconnect();
 
@@ -47,9 +54,9 @@ public class PersonenListeDB implements PersonenListe {
     }
 
     @Override
-    public Person[] getArray(int city_ID) throws ClassNotFoundException, SQLException{
+    public Person[] getArray(int city_ID) throws SakilaException {
         List<Person> personenliste = get(city_ID);
-        Person [] array = new Person[personenliste.size()];
+        Person[] array = new Person[personenliste.size()];
         return personenliste.toArray(array);
     }
 

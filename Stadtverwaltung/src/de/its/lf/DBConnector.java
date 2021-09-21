@@ -1,6 +1,8 @@
 package de.its.lf;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class DBConnector {
 
@@ -22,30 +24,42 @@ public abstract class DBConnector {
         this.dbName = dbName;
     }
 
-    public abstract void connect() throws Exception;
+    public abstract void connect() throws SakilaException;
 
-    public void disconnect() throws SQLException {
-        res.close();
-        stat.close();
-        con.close();
+    public void disconnect() throws SakilaException {
+        try {
+            res.close();
+            stat.close();
+            con.close();
+        } catch (SQLException se) {
+            throw new SakilaException("Das schließen hat nicht funktioniert");
+        }
     }
 
-    public ResultSet query(String sql) throws SQLException {
+    public ResultSet query(String sql) throws SakilaException {
         if (sql != null) {
-            stat = con.createStatement();
-            stat.executeQuery(sql);
-            res = stat.getResultSet();
-
-            return res;
+            try {
+                stat = con.createStatement();
+                stat.executeQuery(sql);
+                res = stat.getResultSet();
+                
+                return res;
+            } catch (SQLException ex) {
+                throw new SakilaException("Queryausführung hat nicht funktioniert");
+            }
         } else {
             return null;
         }
     }
 
-    public void querydml(String sql) throws SQLException {
+    public void querydml(String sql) throws SakilaException {
         if (sql != null) {
-            stat = con.createStatement();
-            stat.executeUpdate(sql);
+            try {
+                stat = con.createStatement();
+                stat.executeUpdate(sql);
+            } catch (SQLException ex) {
+                throw new SakilaException("Updatequery hat nicht funktioniert");
+            }
             
         } else {
             System.out.println("sql Statement is null");

@@ -37,8 +37,8 @@ public class GUIStadt extends javax.swing.JFrame {
 
         try {
             lst_laender.setListData(laenderListe.getArray());
-        } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Fehler beim Laden der Daten", JOptionPane.ERROR_MESSAGE);
+        } catch (SakilaException ex) {
+           JOptionPane.showMessageDialog(this, ex.getMessage(), "Fehler Länderansicht", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -244,12 +244,14 @@ public class GUIStadt extends javax.swing.JFrame {
 
         Land land = (Land) lst_laender.getSelectedValue();
         if (land != null) {
+            
             try {
                 lst_staedte.setListData(staedteListe.getArray(land.getCountry_ID()));
-
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(GUIStadt.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SakilaException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Fehler Städteansicht", JOptionPane.ERROR_MESSAGE);
             }
+
+            
         }//else errormessage
     }//GEN-LAST:event_lst_laenderValueChanged
 
@@ -262,8 +264,8 @@ public class GUIStadt extends javax.swing.JFrame {
                 txf_CityBezeichnung.setText(stadt.getCity_Bezeichnung());
 
                 lst_personen.setListData(personenListe.getArray(stadt.getCity_ID()));
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(GUIStadt.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SakilaException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Fehler Personenansicht", JOptionPane.ERROR_MESSAGE);
             }
         }
 

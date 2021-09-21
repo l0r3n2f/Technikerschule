@@ -8,6 +8,8 @@ package de.its.lf;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,24 +24,28 @@ public class LaenderListeDB implements LaenderListe {
     }
 
     @Override
-    public List<Land> get() throws ClassNotFoundException, SQLException {
-        dBConnector.connect();
-
-        List<Land> laenderListe = new ArrayList();
-        ResultSet rs = dBConnector.query("SELECT * from country");
-        
-        while (rs.next()){
-            Land land = new Land();
-            land.setCountry_ID(Integer.parseInt(rs.getString("country_id")));
-            land.setCountry_Bezeichnung(rs.getString("country"));
-            laenderListe.add(land);
+    public List<Land> get() throws SakilaException {
+        try {
+            dBConnector.connect();
             
+            List<Land> laenderListe = new ArrayList();
+            ResultSet rs = dBConnector.query("SELECT * from country");
+            
+            while (rs.next()){
+                Land land = new Land();
+                land.setCountry_ID(Integer.parseInt(rs.getString("country_id")));
+                land.setCountry_Bezeichnung(rs.getString("country"));
+                laenderListe.add(land);
+                
+            }
+            dBConnector.disconnect();
+            return laenderListe;
+        } catch (SQLException ex) {
+            throw new SakilaException("Datenverarbeitung von den Ländern hat nicht funktioniert");
         }
-        dBConnector.disconnect();
-        return laenderListe;
     }
     
-    public Land[] getArray() throws ClassNotFoundException, SQLException {
+    public Land[] getArray() throws SakilaException {
         List<Land> laenderListe = get();
          Land[] array = new Land[laenderListe.size()];
         return laenderListe.toArray(array);

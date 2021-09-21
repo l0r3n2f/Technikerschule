@@ -14,8 +14,8 @@ import java.sql.SQLException;
  */
 public interface LaenderListe {
 
-    public List<Land> get() throws ClassNotFoundException, SQLException;
-    public Land[] getArray() throws ClassNotFoundException, SQLException;
+    public List<Land> get() throws SakilaException;
+    public Land[] getArray() throws SakilaException;
 
     public void insert(Land land);
 
